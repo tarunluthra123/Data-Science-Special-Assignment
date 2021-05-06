@@ -22,6 +22,7 @@
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+library(RColorBrewer)
 
 # I. Read the contents of the file
 df <- read.csv('Set3.csv')
@@ -47,11 +48,10 @@ zoneGroups
 
 # VI. Get a count of the number of records for each group
 count(zoneGroups)
-count(zoneGroups)$Zone
 
 # VII. Using ggplot(), plot a barchart displaying the number of offences in each Zone. (use all the possible parameters)
-barplot(sort(table(zoneGroups$Zone), decreasing = T), 
-        las = 2, main = "Zone.")
+coul <- brewer.pal(8, "Set2") 
+barplot(sort(table(zoneGroups$Zone), decreasing = T), las = 2, main = "Zone", col=coul)
 
 # Alternative method to generate plot
 ggplot(count(zoneGroups), aes(x=Zone,y=n)) + 
@@ -70,7 +70,7 @@ summary(yearGroup)
 
 # X. Plot a barchart with column Year_of_event that displays the number of offences by year
 barplot(table(yearGroup$Year_of_event), 
-        las = 2, main = "Year of event")
+        las = 2, main = "Year of event", col=coul)
 
 
 # XI. Create another bar chart that displays the number of offences by month instead of year
@@ -79,7 +79,7 @@ df$Month_of_event <- df %>% with(month(mdy(Date_of_event)))
 monthGroup <- df %>% group_by(Month_of_event)
 
 barplot(table(monthGroup$Month_of_event), 
-        las = 2, main = "Month of event")
+        las = 2, main = "Month of event",col=coul)
 
 
 # XII. Group and summarize the data by month.
@@ -96,7 +96,21 @@ View(df)
 
 
 # XIV. What’s the need of filtering the data? Show examples using appropriate commands
+df <- df %>% filter(!is.na(Zone) & Zone != 'UNKNOWN')
+zoneGroups <- df %>% group_by(Zone)
 
+count(zoneGroups)
+
+barplot(sort(table(zoneGroups$Zone), decreasing = T), 
+        las = 2, main = "Zone", col=coul)
 
 # XV. What other charts can you plot for XI ? Which one will leverage more information and why?( elaborate in comments)
 
+# Bar chart that displays the number of offences by Type_of_offence
+barplot(table(df$Type_of_offence), las = 2, main = "Type",col=coul)
+
+# Bar chart that displays the number of offences by Summary_of_offence
+barplot(table(df$Summary_of_offence), las = 2, main = "Summary",col=coul)
+
+# Bar chart that displays the number of offences by Block
+barplot(table(df$Block[df$Block!=""]), las=2, main="Block", col=coul)
