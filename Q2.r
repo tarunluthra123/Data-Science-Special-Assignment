@@ -53,6 +53,7 @@ count(zoneGroups)$Zone
 barplot(sort(table(zoneGroups$Zone), decreasing = T), 
         las = 2, main = "Zone.")
 
+# Alternative method to generate plot
 ggplot(count(zoneGroups), aes(x=Zone,y=n)) + 
   geom_bar(stat="identity" )
 
